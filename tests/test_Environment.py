@@ -1,23 +1,35 @@
 # -*-coding:Latin-1 -*
 
 __license__ = "GPLv3"
+__author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
+
+
+#=============================================================================
+#=============================================================================
+
 
 import unittest
 import os
 import sys
 import shutil
+
 from bvservice.Environment import Environment
+
+import TestsHelpers
 
 
 class testEnvironment(unittest.TestCase):
 
+  TestExecutionDataPath = ""
+
+
   @classmethod
   def setUpClass(cls):
 
-    Environment.ExecutionDataPath = os.path.join(os.path.dirname(os.path.abspath(__file__)),"_exec")
+    cls.TestExecutionDataPath = TestsHelpers.getDataPath("Environment")
 
-    if os.path.isdir(Environment.ExecutionDataPath):
-      shutil.rmtree(Environment.ExecutionDataPath)
+    if os.path.isdir(cls.TestExecutionDataPath):
+      shutil.rmtree(cls.TestExecutionDataPath)
 
 
   #=============================================================================
@@ -25,27 +37,27 @@ class testEnvironment(unittest.TestCase):
 
 
   def setUp(self):
-    self.Env = Environment("My Test Zone")
+    self.Env = Environment("My Test Zone",self.TestExecutionDataPath)
 
 
   #=============================================================================
   #=============================================================================
 
 
-  def test1_CodedZoneName(self):
+  def test01_CodedZoneName(self):
 
     print
-    print(Environment.getCodedZoneName("AnotherTestZone"))
-    print(Environment.getCodedZoneName("Another Test Zone"))
-    print(Environment.getCodedZoneName('Montluçon'))
-    print(Environment.getCodedZoneName('Saint Germain des Près'))
+    print(Environment.getCodedName("AnotherTestZone"))
+    print(Environment.getCodedName("Another Test Zone"))
+    print(Environment.getCodedName('Montluçon'))
+    print(Environment.getCodedName('Saint Germain des Près'))
 
 
   #=============================================================================
   #=============================================================================
 
 
-  def test2_Paths(self):
+  def test02_Paths(self):
 
     print
     print(self.Env.TemplatesPath)
@@ -58,7 +70,7 @@ class testEnvironment(unittest.TestCase):
   #=============================================================================
 
 
-  def test3_InitializeStorage(self):
+  def test03_InitializeStorage(self):
 
     self.Env.initializeGlobalStorage()
     self.Env.initializeCurrentZoneStorage()

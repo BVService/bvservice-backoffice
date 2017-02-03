@@ -1,11 +1,18 @@
 
 __license__ = "GPLv3"
+__author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
+
+
+#=============================================================================
+#=============================================================================
+
 
 import os
 import sys
 import shutil
 import glob
-import ConfigParser
+
+import Tools
 
 
 class Environment:
@@ -15,19 +22,21 @@ class Environment:
   PreparationDir = "preparation"
   ScenariosDir = "scenarios"
   ResourcesDir = "resources"
-  ExecutionDataPath = "/var/local/bvservice"
 
+  def __init__(self,ZoneName,ExecDataPath="/var/local/bvservice",):
 
-  def __init__(self,ZoneName):
+    self.ExecutionDataPath = ExecDataPath
 
     self.ZoneName = ZoneName
-    self.CodedZoneName = self.getCodedZoneName(ZoneName.decode())
+    self.CodedZoneName = Environment.getCodedName(ZoneName)
 
-    self.TemplatesPath = os.path.join(Environment.ExecutionDataPath,Environment.TemplatesDir)
+    self.TemplatesPath = os.path.join(self.ExecutionDataPath,Environment.TemplatesDir)
     self.PreparationTemplatesPath = os.path.join(self.TemplatesPath,Environment.PreparationDir)
     self.ScenariosTemplatesPath = os.path.join(self.TemplatesPath,Environment.ScenariosDir)
-    self.ZonesPath = os.path.join(Environment.ExecutionDataPath,Environment.ZonesDir)
+    self.ZonesPath = os.path.join(self.ExecutionDataPath,Environment.ZonesDir)
     self.CurrentZonePath = os.path.join(self.ZonesPath,self.CodedZoneName)
+    self.CurrentZonePreparationPath = os.path.join(self.CurrentZonePath,Environment.PreparationDir)
+    self.CurrentZoneScenariosPath = os.path.join(self.CurrentZonePath,Environment.ScenariosDir)
 
     self.ResourcesPath = os.path.join(os.path.dirname(os.path.abspath(__file__)),Environment.ResourcesDir)
 
@@ -37,7 +46,7 @@ class Environment:
 
 
   @staticmethod
-  def getCodedZoneName(OriginalName):
+  def getCodedName(OriginalName):
     CodedName = OriginalName.replace(" ","_")
     return CodedName
     # other method, using unicodedata : removing accents then replacing spaces by underscores
@@ -49,17 +58,17 @@ class Environment:
 
 
   def initializeGlobalStorage(self):
-    os.makedirs(self.TemplatesPath)
-    os.makedirs(self.PreparationTemplatesPath)
-    os.makedirs(self.ScenariosTemplatesPath)
-    os.makedirs(self.ZonesPath)
+    Tools.makedirs(self.TemplatesPath)
+    Tools.makedirs(self.PreparationTemplatesPath)
+    Tools.makedirs(self.ScenariosTemplatesPath)
+    Tools.makedirs(self.ZonesPath)
 
     # installation of templates for preparation
-    for File in glob.glob(os.path.join(self.ResourcesPath,Environment.TemplatesDir,Environment.PreparationDir,'*')):
+    for File in glob.glob(os.path.join(self.ResourcesPath,self.TemplatesDir,self.PreparationDir,'*')):
       shutil.copy(File,self.PreparationTemplatesPath)
 
     # installation of templates for scenarios
-    for File in glob.glob(os.path.join(self.ResourcesPath,Environment.TemplatesDir,Environment.ScenariosDir,'*')):
+    for File in glob.glob(os.path.join(self.ResourcesPath,self.TemplatesDir,self.ScenariosDir,'*')):
       shutil.copy(File,self.ScenariosTemplatesPath)
 
 
@@ -68,4 +77,6 @@ class Environment:
 
 
   def initializeCurrentZoneStorage(self):
-    os.makedirs(self.CurrentZonePath)
+    Tools.makedirs(self.CurrentZonePath)
+    Tools.makedirs(self.CurrentZonePreparationPath)
+    Tools.makedirs(self.CurrentZoneScenariosPath)

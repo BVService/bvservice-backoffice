@@ -7,7 +7,7 @@ This set of scripts is for backoffice management of the BVservice web app, mainl
 These scripts requires __Python 2.7+__ and the following packages:
 * shutil
 * glob
-* ConfigParser
+* argparse
 
 
 # Usage
