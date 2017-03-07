@@ -4,11 +4,14 @@ This set of scripts is for backoffice management of the BVservice web app, mainl
 
 # Requirements
 
-These scripts requires __Python 2.7+__ and the following packages:
+These scripts requires __Python 2.7+__ and the following python packages:
 * shutil
 * glob
 * argparse
 
+It also requires that the following bvservice components are correctly installed:
+* LandProcessor library and simulators
+* OpenFLUID simulators for computation of indicators (bvservice-simulation)
 
 # Usage
 
