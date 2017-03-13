@@ -24,4 +24,8 @@ setup(name='bvservice-backoffice',
       packages=['bvservice'],
       scripts=['BVservice-cli.py'],
       install_requires=['argparse','datetime'],
+      package_data={
+        'bvservice' : ['resources/templates/preparation/*','resources/templates/scenarios/*'],
+      },
+      include_package_data=True,
       zip_safe=False)

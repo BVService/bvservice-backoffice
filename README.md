@@ -13,22 +13,31 @@ It also requires that the following bvservice components are correctly installed
 * LandProcessor library and simulators
 * OpenFLUID simulators for computation of indicators (bvservice-simulation)
 
+
+# Installation
+
+From the sources directory, run the following pip command (with or without sudo depending on your privileges)
+
+```
+pip install .
+```
+
 # Usage
 
 ## Command line
 
 To get more informations on how to use the command line tool, you can display the help:
 ```
-python BVservice-cli.py --help
+BVservice-cli.py --help
 ```
 
 Specific help can be obtained for both preparation and scenario subcommands
 ```
-python BVservice-cli.py preparation --help
+BVservice-cli.py preparation --help
 ```
 or
 ```
-python BVservice-cli.py scenario --help
+BVservice-cli.py scenario --help
 ```
 
 ## Python package
