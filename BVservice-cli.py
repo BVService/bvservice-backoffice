@@ -37,6 +37,7 @@ ParserScen.add_argument("--hedges-url")
 ParserScen.add_argument("--benches-url")
 ParserScen.add_argument("--grassbands-url")
 ParserScen.add_argument("--thalwegs-url")
+ParserScen.add_argument("--snap-dist")
 
 Args = vars(Parser.parse_args())
 
