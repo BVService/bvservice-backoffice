@@ -10,8 +10,9 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 import os
 import shutil
 import glob
-import Environment
 from string import Template
+
+import Environment
 
 
 class OpenFLUID:
