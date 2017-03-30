@@ -45,6 +45,15 @@ class Manager:
   #=============================================================================
   #=============================================================================
 
+
+  def displayMessage(self,Phase,Msg):
+    print "==",self.Env.CodedZoneName,"/",Phase,":",Msg
+
+
+  #=============================================================================
+  #=============================================================================
+
+
   @staticmethod
   def generateName():
 
@@ -83,6 +92,8 @@ class Manager:
 
   def runPreparation(self,Context):
 
+    self.displayMessage("preparation","Initialization")
+
     OF = OpenFLUID.OpenFLUID()
 
     # In/Out paths for the preparation simulation
@@ -92,10 +103,14 @@ class Manager:
     OUTPath = os.path.join(self.Env.CurrentZonePreparationPath,"OUT")
     VectorReleaseOUTPath = os.path.join(OUTPath,"gisdata-release","vector")
 
+    self.displayMessage("preparation","Preparing files tree")
+
     Tools.makedirs(INPath)
 
 
     # 0. Check context contents
+
+    self.displayMessage("preparation","Checking run context")
 
     if not ("DEM_url" in Context and "plots_url" in Context):
       raise ValueError("Context must contain DEM_url and plots_url parameters")
@@ -105,10 +120,14 @@ class Manager:
 
     # 1. Generate OpenFLUID files from preparation templates + Context
 
+    self.displayMessage("preparation","Generating simulation configuration")
+
     OF.generateFilesFromTemplates(NormContext,self.Env.PreparationTemplatesPath,
                                               INPath)
 
     # 2. Retreive required spatial layers from geoserver
+
+    self.displayMessage("preparation","Retreiving geospatial data")
 
     GS = Geoserver.Geoserver("","")
 
@@ -118,11 +137,13 @@ class Manager:
 
     # 3. Run simulation
 
-    OF.execute(INPath,OUTPath)
+    self.displayMessage("preparation","Running simulation")
 
+    OutErrFilePath = os.path.join(self.Env.CurrentZonePreparationPath,"openfluid-execution.outerr")
+    if not OF.execute(INPath,OUTPath,OutErrFilePath):
+      raise RuntimeError("Error in OpenFLUID simulation during preparation execution, see file {0} for details".format(OutErrFilePath))
 
-    # 4. Publish resulting layers to geoserver
-    # really needed or only stored in the preparation release directory?
+    self.displayMessage("preparation","Completed")
 
 
   #=============================================================================
@@ -131,9 +152,12 @@ class Manager:
 
   def runScenario(self,Context):
 
+    self.displayMessage("scenario[?]","Initialization")
+
     OF = OpenFLUID.OpenFLUID()
 
     # Check preparation has been run before
+
     PreparationOUTPath = os.path.join(self.Env.CurrentZonePreparationPath,"OUT")
 
     if not os.path.exists(PreparationOUTPath):
@@ -142,14 +166,19 @@ class Manager:
 
     # 0. Check context contents and prepare directories tree
 
+    self.displayMessage("scenario[?]","Checking run context")
+
     if not "scenario_name" in Context:
       raise ValueError("Context must contain scenario_name parameters")
 
     NormContext = Manager.normalizeContext(Context)
 
+    CurrentScenarioName = Manager.getScenarioName(Context["scenario_name"])
+
+    self.displayMessage("scenario["+CurrentScenarioName+"]","Preparing files tree")
 
     CurrentScenarioPath = os.path.join(self.Env.CurrentZoneScenariosPath,
-                                       Manager.getScenarioName(Context["scenario_name"]))
+                                       CurrentScenarioName)
 
     INPath = os.path.join(CurrentScenarioPath,"IN")
     RasterINPath = os.path.join(INPath,"gisdata-input","raster")
@@ -169,11 +198,15 @@ class Manager:
 
     # 1. Generate OpenFLUID files from scenario templates + Context
 
+    self.displayMessage("scenario["+CurrentScenarioName+"]","Generating simulation configuration")
+
     OF.generateFilesFromTemplates(NormContext,self.Env.ScenariosTemplatesPath,
                                               INPath)
 
 
     # 2. Retreive required spatial layers from preparation local storage and geoserver
+
+    self.displayMessage("scenario["+CurrentScenarioName+"]","Retreiving geospatial data")
 
     GS = Geoserver.Geoserver("","")
 
@@ -202,6 +235,10 @@ class Manager:
 
     # 3. Run simulation
 
-    OF.execute(INPath,OUTPath)
+    self.displayMessage("scenario["+CurrentScenarioName+"]","Running simulation")
 
-    # 4. Publish resulting layers to geoserver
+    OutErrFilePath = os.path.join(CurrentScenarioPath,"openfluid-execution.outerr")
+    if not OF.execute(INPath,OUTPath,OutErrFilePath):
+      raise RuntimeError("Error in OpenFLUID simulation during scenario execution, see file {0} for details".format(OutErrFilePath))
+
+    self.displayMessage("scenario["+CurrentScenarioName+"]","Completed")

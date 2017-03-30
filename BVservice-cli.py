@@ -9,6 +9,7 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 
 import argparse
+import sys
 
 from bvservice import Manager as BVsManager
 from bvservice import Environment as BVsEnv
@@ -62,9 +63,15 @@ del Context["exec_data_path"]
 print("Work path: {0}".format(Env.CurrentZonePath))
 print("Context: {0}".format(Context))
 
-Env.initializeGlobalStorage()
+try:
+  Env.initializeGlobalStorage()
 
-if Args["command_name"] == "preparation":
-  Man.runPreparation(Context)
-elif Args["command_name"] == "scenario":
-  Man.runScenario(Context)
+  if Args["command_name"] == "preparation":
+    Man.runPreparation(Context)
+  elif Args["command_name"] == "scenario":
+    Man.runScenario(Context)
+except Exception as e:
+  print str(e)
+  sys.exit(1)
+else:
+  sys.exit(0)

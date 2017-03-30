@@ -37,7 +37,7 @@ class Geoserver:
     if (FromURL.startswith("file://")):
       FromLocalPath = FromURL[7:]
 
-      # transformatio of relative paths to absolute paths
+      # transformation of relative paths to absolute paths
       if not os.path.isabs(FromLocalPath):
         FromLocalPath = os.path.join(os.getcwd(),FromLocalPath)
 
@@ -46,7 +46,7 @@ class Geoserver:
 
     # processing of other remote files
     else:
-      print("Geoserver.retreiveLayer : not implemented")
+      raise RuntimeError("Geoserver.retreiveLayer : not implemented for remote url")
 
 
   #=============================================================================
@@ -54,4 +54,4 @@ class Geoserver:
 
 
   def publishLayer(self,FromLocalPath,ToURL):
-    print("not implemented")
+    raise RuntimeError("Geoserver.publishLayer : not implemented")

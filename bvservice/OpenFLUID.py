@@ -8,6 +8,7 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 
 import os
+import subprocess
 import shutil
 import glob
 from string import Template
@@ -52,5 +53,11 @@ class OpenFLUID:
   #=============================================================================
 
 
-  def execute(self,InPath,OutPath):
-    return (os.system("openfluid run {0} {1}".format(InPath,OutPath)) == 0)
+  def execute(self,InPath,OutPath,StdOutErrFilePath=None):
+
+    Cmd = ["openfluid","run",InPath,OutPath]
+    if not StdOutErrFilePath:
+      return (subprocess.call(Cmd) == 0)
+    else:
+      StdOutErrFile = open(StdOutErrFilePath,"w")
+      return (subprocess.call(Cmd,stdout=StdOutErrFile,stderr=subprocess.STDOUT) == 0)
