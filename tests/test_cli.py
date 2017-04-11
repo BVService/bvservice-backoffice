@@ -70,6 +70,22 @@ class testCLI(unittest.TestCase):
   #=============================================================================
 
 
+  def test03_ScenarioNamed(self):
+    returncode = os.system("python BVservice-cli.py --exec-data-path={0} scenario --zone-name=\"My CLI zone\" "
+                                                   "--scenario-name=\"My story\" "
+                                                   "--ditches-url=file://tests/datasets/DardaillonSmall/vector/fosses.shp "
+                                                   "--hedges-url=file://tests/datasets/DardaillonSmall/vector/haies.shp "
+                                                   "--benches-url=file://tests/datasets/DardaillonSmall/vector/talus.shp "
+                                                   "--grassbands-url=file://tests/datasets/DardaillonSmall/vector/bandesenherbees.shp"
+                                                   .format(self.TestExecutionDataPath))
+
+    self.assertEqual(returncode,0)
+
+
+  #=============================================================================
+  #=============================================================================
+
+
   def test10_WrongCommand(self):
     returncode = os.system("python BVservice-cli.py --exec-data-path={0} wrngcmd --zone-name=\"My WRNGCMD CLI zone\" "
                                                    "--DEM-url=file://tests/datasets/DardaillonSmall/raster/dem.tif "

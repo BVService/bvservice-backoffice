@@ -82,7 +82,7 @@ class Manager:
     if Name is None or not Name:
       return ISODateStr+Manager.generateName()
     else:
-      return ISODateStr+Environment.Environment.getCodedName(Name)
+      return Environment.Environment.getCodedName(Name)
 
 
   #=============================================================================
