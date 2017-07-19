@@ -81,6 +81,19 @@ class testCLI(unittest.TestCase):
 
     self.assertEqual(returncode,0)
 
+  #=============================================================================
+  #=============================================================================
+
+
+  def test04_PreparationModLandUseFieldName(self):
+    returncode = os.system("python BVservice-cli.py --exec-data-path={0} preparation --zone-name=\"My CLI zone with mod landuse field name\" "
+                                                   "--DEM-url=file://tests/datasets/DardaillonSmallModLandUseFieldName/raster/dem.tif "
+                                                   "--plots-url=file://tests/datasets/DardaillonSmallModLandUseFieldName/vector/plots.shp "
+                                                   "--landuse-field=LandUseNew"
+                                                   .format(self.TestExecutionDataPath))
+
+    self.assertEqual(returncode,0)
+
 
   #=============================================================================
   #=============================================================================
